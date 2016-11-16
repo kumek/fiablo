@@ -5,6 +5,7 @@
   "main": "serverindex.js",
   "scripts": {
     "build": "gulp build",
+    "watch": "gulp watch",
     "serve": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -35,6 +36,8 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
   }

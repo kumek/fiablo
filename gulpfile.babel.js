@@ -7,6 +7,7 @@ import source from 'vinyl-source-stream';
 import sourcemaps from 'gulp-sourcemaps';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';
+import colors from 'colors';
 
 const src = './src/';
 const dst = './dist/';
@@ -21,7 +22,7 @@ export const paths = {
 		dst: dst
 	},
 	js: {
-		src: [src + 'app/**.*js'],
+		src: src + 'app/**/*.js',
 		dst: dst + 'resources',
 		entry: src + 'app/main.js'
 	}
@@ -49,4 +50,12 @@ gulp.task('scripts', function () {
     .pipe(gulp.dest(paths.js.dst));
 });
 
-gulp.task('build', ['html', 'scripts']);
+gulp.task('build', ['html', 'scripts', 'watch']);
+
+gulp.task('watch', function() {
+	var watcher = gulp.watch(paths.js.src, ['scripts']);
+	watcher.on('change', function(event) {
+		console.log(`${event.path}`.green + ' - ' + (event.type === 'deleted' ? `${event.type}`.red : `${event.type}`.yellow));
+	});
+})
+
