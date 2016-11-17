@@ -8,13 +8,16 @@ import sourcemaps from 'gulp-sourcemaps';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';
 import colors from 'colors';
+import sass from 'gulp-sass';
+import cleanCSS from 'gulp-clean-css';
+import concat from 'gulp-concat';
 
 const src = './src/';
 const dst = './dist/';
 
 export const paths = {
 	style: {
-		src: [src + 'assets/styles/**.scss', src + 'assets/styles/**.css'],
+		src: [src + 'assets/styles/**.scss', src + 'app/components/**/*.scss'],
 		dst: dst + 'styles'
 	},
 	html: {
@@ -27,6 +30,15 @@ export const paths = {
 		entry: src + 'app/main.js'
 	}
 }
+
+gulp.task('styles', function() {
+	return gulp.src(paths.style.src)
+	.pipe(sourcemaps.init())
+	.pipe(sass().on('error', sass.logError))
+	.pipe(concat('style.css'))
+	.pipe(sourcemaps.write())
+	.pipe(gulp.dest(paths.style.dst))
+})
 
 gulp.task('html', function() {
 	return gulp.src(paths.html.src)
@@ -50,12 +62,15 @@ gulp.task('scripts', function () {
     .pipe(gulp.dest(paths.js.dst));
 });
 
-gulp.task('build', ['html', 'scripts', 'watch']);
+gulp.task('build', ['html', 'styles', 'scripts', 'watch']);
 
 gulp.task('watch', function() {
-	var watcher = gulp.watch(paths.js.src, ['scripts']);
-	watcher.on('change', function(event) {
-		console.log(`${event.path}`.green + ' - ' + (event.type === 'deleted' ? `${event.type}`.red : `${event.type}`.yellow));
-	});
-})
+	var watchers = [];
+	watchers.push(gulp.watch(paths.style.src, ['styles']));
 
+	watchers.push(gulp.watch([paths.js.src], ['scripts']));
+
+	watchers.forEach(watcher => watcher.on('change', event => {
+		console.log(`${event.path}`.green + ' - ' + (event.type === 'deleted' ? `${event.type}`.red : `${event.type}`.yellow));
+	}));
+})

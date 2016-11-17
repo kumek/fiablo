@@ -12,7 +12,7 @@ export default class TopSection extends Component {
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onNameSubmit = this.onNameSubmit.bind(this);
 	}
-
+	
 	onNameSubmit(e) {
 		e.preventDefault();
 		this.props.setName(this.state.name);
@@ -21,6 +21,7 @@ export default class TopSection extends Component {
 	onNameChange(e) {
 		this.setState({ name: e.target.value });
 	}
+
 
 	render() {
 		return (

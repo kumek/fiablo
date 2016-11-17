@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import TopSection from './top-section/top-section';
+import Stats from './stats/stats';
 
 export default class App extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {}
+		this.state = {
+			player: {
+				stats: {
+					hp: 150,
+					exp: 400,
+					lvl: 4
+				}
+			}
+		}
 		this.setName = this.setName.bind(this);
 	}
 
@@ -18,6 +27,7 @@ export default class App extends Component {
 		return (
 			<div>
 				<TopSection name={this.state.name} setName={this.setName}/>
+				<Stats stats={this.state.player.stats}/>
 			</div>
 			)
 	}
