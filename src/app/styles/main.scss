@@ -1,4 +1,12 @@
-@include config/main;
-@include typings/typings;
+// Variables
+@import 'variables/colors';
+@import 'variables/typography';
 
-japierdol
+//Mixins
+
+//Configs
+@import 'config/buttons';
+
+//Partials
+
+//Layouts

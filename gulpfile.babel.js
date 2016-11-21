@@ -44,7 +44,7 @@ gulp.task('styles', function() {
 		 	let tmpPath = err.relativePath.split('/');
 		 	tmpPath[tmpPath.length-1] = tmpPath[tmpPath.length-1].white;
 		 	tmpPath = tmpPath.join('/');
-		 	console.log(prompt + 'Error'.bgRed.white + ' on file ' + tmpPath + `:(${err.line},${err.column})`.white);
+		 	console.log(prompt + 'Error'.bgRed.white + ' on file ' + tmpPath + `:(${err.line},${err.column})`.bold.white);
 
 		 	//Print error message
 		 	var whiteMode = false;

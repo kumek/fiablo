@@ -1,0 +1,29 @@
+// Basic colors values
+$color_green: #258039;
+$color_green_light: lighter($color_green, 10%);
+$color_green_dark: darken($color_green, 10%);
+
+$color_yellow: #f5be41;
+$color_yellow_light: lighten($color_yellow, 10%);
+$color_yellow_dark: darken($color_yellow, 10%);
+
+$color_blue: #31a9b8;
+$color_blue_light: lighten($color_blue, 10%);
+$color_blue_dark: darken($color_blue, 10%);
+
+$color_red: #cf3721;
+$color_red_light: lighten($color_red, 10%);
+$color_red_dark: darken($color_red, 10%);
+
+// Font colors
+$color_text: #555;
+$color_text_light: #f5f5f5;
+$color_text_dark: #222;
+
+// Backgrounds
+$color_main_bg: #f5f5f5;
+
+
+
+
+

@@ -1,0 +1,19 @@
+.button {
+	border: 0;
+	&-success {
+		background-color: $color_green;
+		color: $color_text_light;
+		&:hover {
+			background-color: $color_green_light;
+		}
+	}
+
+	&-error {
+		background-color: $color_red;
+		color: $color_text_light;
+		&:hover {
+			background-color: $color_red_light;
+		}
+	}
+
+}
