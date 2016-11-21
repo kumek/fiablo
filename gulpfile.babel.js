@@ -13,6 +13,7 @@ import cleanCSS from 'gulp-clean-css';
 import concat from 'gulp-concat';
 import plumber from 'gulp-plumber';
 import changed from 'gulp-change';
+import eslint from 'gulp-eslint';
 
 const src = './src/';
 const dst = './dist/';
@@ -22,10 +23,12 @@ export const paths = {
 		src: src + 'app/styles/**/*.scss',
 		dst: dst + 'resources/styles/'
 	},
+
 	html: {
 		src: src + '**/*.html',
 		dst: dst
 	},
+
 	js: {
 		src: src + 'app/**/*.js',
 		dst: dst + 'resources/styles',
@@ -33,7 +36,7 @@ export const paths = {
 	}
 }
 
-gulp.task('styles', function() {
+gulp.task('styles', () => {
 	return gulp.src(paths.style.src)
 	.pipe(plumber({
 		 errorHandler: err => {
@@ -75,10 +78,16 @@ gulp.task('styles', function() {
     .pipe(gulp.dest(paths.style.dst));
 });
 
-gulp.task('html', function() {
+gulp.task('html', () => {
 	return gulp.src(paths.html.src)
 	.pipe(rename({dirname: ''}))
 	.pipe(gulp.dest(paths.html.dst))
+});
+
+gulp.task('eslint', () => {
+	return gulp.src(paths.js.src)
+	.pipe(eslint())
+	.pipe(eslint.format())
 });
 
 gulp.task('scripts', function () {
@@ -97,13 +106,13 @@ gulp.task('scripts', function () {
     .pipe(gulp.dest(paths.js.dst));
 });
 
-gulp.task('build', ['html', 'styles', 'scripts', 'watch']);
+gulp.task('build', ['html', 'styles', 'eslint', 'scripts', 'watch']);
 
-gulp.task('watch', function() {
+gulp.task('watch', () => {
 	var watchers = [];
 	watchers.push(gulp.watch(paths.style.src, ['styles']));
 
-	watchers.push(gulp.watch([paths.js.src], ['scripts']));
+	watchers.push(gulp.watch([paths.js.src], ['eslint', 'scripts']));
 
 	watchers.forEach(watcher => watcher.on('change', event => {
 		console.log(`${event.path}`.green + ' - ' + (event.type === 'deleted' ? `${event.type}`.red : `${event.type}`.yellow));
