@@ -39,6 +39,6 @@ export default class TopSection extends Component {
 					}
 				</div>
 			</nav>
-		)
+		);
 	}
 }
