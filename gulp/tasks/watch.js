@@ -4,6 +4,7 @@ import colors from 'colors';
 import {path} from '../config/path';
 
 gulp.task('watch', () => {
+	let watchers = []; 
 	gulp.watch(path.style.src, ['styles']);
 	gulp.watch(path.scripts.src, ['scripts']);
 

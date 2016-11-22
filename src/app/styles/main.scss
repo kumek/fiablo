@@ -1,13 +1,16 @@
 // Variables
-@import 'variables/*';
+@import 'variables/colors';
+@import 'variables/typography';
 
 //Mixins
 
 //Configs
-@import 'config/*';
+// @import 'config/*';
 
 //Partials
+@import 'partials/buttons';
+@import 'partials/navBar';
 
 //Layouts
-@import 'layouts/*';
+@import 'layouts/topSection';
 
