@@ -1,12 +1,13 @@
 // Variables
-@import 'variables/colors';
-@import 'variables/typography';
+@import 'variables/*';
 
 //Mixins
 
 //Configs
-@import 'config/buttons';
+@import 'config/*';
 
 //Partials
 
 //Layouts
+@import 'layouts/*';
+

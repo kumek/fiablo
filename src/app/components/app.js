@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TopSection from './top-section/top-section';
+import TopSection from './topSection/topSection';
 import Stats from './stats/stats';
 
 export default class App extends Component {
