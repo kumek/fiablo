@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import TopSection from './topSection/topSection';
-import Stats from './stats/stats';
+import Map from './map/map';
 
 export default class App extends Component {
 	constructor(props) {
@@ -26,8 +25,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<div>
-				<TopSection name={this.state.name} setName={this.setName}/>
-				<Stats stats={this.state.player.stats}/>
+				<Map />
 			</div>
 			)
 	}
