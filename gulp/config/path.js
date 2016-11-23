@@ -21,5 +21,9 @@ export const path = {
 	server: {
         root: dst + '',
         watch: dst + '**/*.*'
+    },
+    images: {
+    	src: src + 'assets/images/*',
+    	dst: dst + 'resources/images'
     }
 }
