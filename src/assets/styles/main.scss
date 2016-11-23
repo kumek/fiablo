@@ -1,3 +1,4 @@
+
 // Variables
 @import 'variables/colors';
 @import 'variables/typography';
@@ -12,5 +13,6 @@
 @import 'partials/navBar';
 
 //Layouts
-@import 'layouts/topSection';
+@import "layouts/*.scss";
+// @import 'layouts/topSection';
 
