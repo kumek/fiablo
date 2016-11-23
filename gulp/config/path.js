@@ -23,7 +23,7 @@ export const path = {
         watch: dst + '**/*.*'
     },
     images: {
-    	src: src + 'assets/images/*',
-    	dst: dst + 'resources/images'
+    	src: src + 'assets/images/**/*',
+    	dst: dst + 'resources/images/'
     }
 }
