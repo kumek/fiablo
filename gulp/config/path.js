@@ -6,7 +6,7 @@ export const path = {
 	dst,
 	src,
 	style: {
-		src: src + 'app/styles/**/*.scss',
+		src: src + 'assets/styles/**/*.scss',
 		dst: dst + 'resources/styles/'
 	},
 	html: {
