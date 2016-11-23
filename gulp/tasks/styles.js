@@ -1,5 +1,6 @@
 import gulp from 'gulp';
 import sourcemaps from 'gulp-sourcemaps';
+import sassGlob from 'gulp-sass-glob';
 import sass from 'gulp-sass';
 import concat from 'gulp-concat';
 import plumber from 'gulp-plumber';
@@ -42,6 +43,7 @@ gulp.task('styles', () => {
 		 }
 	}))
     .pipe(sourcemaps.init())
+    .pipe(sassGlob())
     .pipe(sass({
         errLogToConsole: true
     }))
