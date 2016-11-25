@@ -17,7 +17,7 @@ const _urls = [
 	'grass_14.png',
 	'grass_15.png',
 	'grass_16.png',
-	'grass_17.png',
+	// 'grass_17.png',
 	// 'grass_18.png',
 ];
 const _images = [];

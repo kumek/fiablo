@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import Tile from '../../models/terrain/tiles/tile';
 import TileImages from '../../resources/TileImages';
+import WorldMap from '../WorldMap/WorldMap';
 
 import config from '../../config';
 
 export default class Map extends Component {
 	constructor(props) {
-		super(props)
+		super(props);
+
+		this.worldMap = new WorldMap();
+
 		this.tiles = [];
 		this.state = {
 			scale: props.scale || config.map_scale,
@@ -26,7 +30,6 @@ export default class Map extends Component {
 	    		this.tiles.push(new Tile({x: i, y: j}));
 	    	}
 	    }
-
 	}
 
 	calcMovingVector() {
@@ -38,8 +41,8 @@ export default class Map extends Component {
 
 	componentDidMount() {
 		// Set canvas context
-		this.refs.canvas.width = 800;
-		this.refs.canvas.height = 800;
+		this.refs.canvas.width = 1900;
+		this.refs.canvas.height = 920;
 		this.ctx = this.refs.canvas.getContext('2d');
 
         //Load images - TODO: move somewhere else
@@ -49,7 +52,6 @@ export default class Map extends Component {
         });
 
         this.refs.canvas.addEventListener('mousedown', (e) => {
-        	console.log(this.state);
         	this.setState({
         		draging: true,
         		startDropX: e.clientX,
@@ -65,18 +67,6 @@ export default class Map extends Component {
         		tmpOffsetX: 0,
         		tmpOffsetY: 0
         	});
-
-        	// this.setState({
-        	// 	endDropX: e.clientX,
-        	// 	endDropY: e.clientY
-        	// });
-        	// console.log(`You have moved your mouse from position (${this.state.startDropX},${this.state.startDropY}) to (${this.state.endDropX},${this.state.endDropY})`);
-
-        	// console.log(this.calcMovingVector());
-        	// this.setState({
-        	// 	offsetX: this.state.offsetX + this.calcMovingVector().x,
-        	// 	offsetY: this.state.offsetY + this.calcMovingVector().y
-        	// });
         });
 
         this.refs.canvas.addEventListener('mousemove', (e) => {
