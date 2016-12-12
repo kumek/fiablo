@@ -27,7 +27,7 @@ export default class Renderer {
 
 		console.log(`Center tile calculated: [${_centerTileCords.x},${_centerTileCords.y}]`)
 
-		this.map = this.worldMap.getMap(_centerTileCords.x, _centerTileCords.y, _centerTileCords.x+2, _centerTileCords.y+2);
+		this.map = this.worldMap.getMap(_centerTileCords.x, _centerTileCords.y, _centerTileCords.x+4, _centerTileCords.y+4);
 		console.log(this.map);
 
 		this.map.forEach(tilesRow => tilesRow.forEach( tile => {

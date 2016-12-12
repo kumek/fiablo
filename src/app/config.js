@@ -1,6 +1,6 @@
 const config = {
-	WORLD_HEIGHT: 10,
-	WORLD_WIDTH: 10,
+	WORLD_HEIGHT: 100,
+	WORLD_WIDTH: 100,
 	tile_height: 120,
 	tile_width: 120,
 
