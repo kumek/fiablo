@@ -2,141 +2,182 @@ import React, { Component } from 'react';
 import Tile from '../../models/terrain/tiles/tile';
 import TileImages from '../../resources/TileImages';
 import WorldMap from '../WorldMap/WorldMap';
+import MapRenderer from '../MapRenderer/MapRenderer';
 
 import config from '../../config';
 
 export default class Map extends Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        let _state;
+        super(props);
 
-		this.worldMap = new WorldMap();
+        // Set initial state of map
+        this.state = {
+            scale: props.scale || config.map_scale,
+            indicator: 0,
+            viewport: {
+                width: 800,
+                height: 800,
+                position: {
+                    x: 400,
+                    y: 400
+                }
+            },
+            rendering: false,
+        };
+        
+        // Bind context of functions
+        this.renderMap = this.renderMap.bind(this);
+        this.addEventListeners = this.addEventListeners.bind(this);
+        this.startRendering = this.startRendering.bind(this);
+        this.stopRendering = this.stopRendering.bind(this);
+    }
 
-		this.tiles = [];
-		this.state = {
-			scale: props.scale || config.map_scale,
-			offsetX: 0,
-			offsetY: 0,
-			tmpOffsetX: 0,
-			tmpOffsetY: 0,
-			draging: false
-		};
+    addEventListeners() {
+        this.refs.renderButton.addEventListener('click', this.renderMap)
 
-		this.renderMap = this.renderMap.bind(this);
-		this.calculateMap = this.calculateMap.bind(this);
-
-		this.imagesLoaded = TileImages.loadImages();
-	  	for(let j=0; j<config.tiles_count_height; j++) {
-	    	for(let i=0; i<config.tiles_count_width; i++) {
-	    		this.tiles.push(new Tile({x: i, y: j}));
-	    	}
-	    }
-	}
-
-	calcMovingVector() {
-		return {
-			x: this.state.endDropX - this.state.startDropX,
-			y: this.state.endDropY - this.state.startDropY
-		}
-	}
-
-	componentDidMount() {
-		// Set canvas context
-		this.refs.canvas.width = 1900;
-		this.refs.canvas.height = 920;
-		this.ctx = this.refs.canvas.getContext('2d');
-
-        //Load images - TODO: move somewhere else
-        this.imagesLoaded.then(() => {
-        	this.calculateMap();
-        	this.renderMap();
+        this.refs.toggleRenderButton.addEventListener('click', () => {
+            this.toggleRendering();
+        })
+        this.refs.canvas.addEventListener('mousedown', e => {
+            this.setState({
+                drag_mode: true,
+                startDropX: e.clientX,
+                startDropY: e.clientY,
+                startViewportX: this.state.viewport.position.x || 400,
+                startViewportY: this.state.viewport.position.y || 400 
+            });
         });
 
-        this.refs.canvas.addEventListener('mousedown', (e) => {
-        	this.setState({
-        		draging: true,
-        		startDropX: e.clientX,
-        		startDropY: e.clientY
-        	});
+        this.refs.canvas.addEventListener('mouseup', e => {
+            let _viewport = Object.assign({}, this.state.viewport);
+            _viewport.position = {
+                x: this.state.viewport.position.x + this.state.tmpOffsetX,
+                y: this.state.viewport.position.y + this.state.tmpOffsetY
+            }
+
+            this.setState({
+                drag_mode: false,
+                startDropX: 0,
+                startDropY: 0,
+                tmpOffsetX: 0,
+                tmpOffsetY: 0,
+                viewport: _viewport
+            });
         });
 
-        this.refs.canvas.addEventListener('mouseup', (e) => {
-        	this.setState({
-        		draging: false,
-        		offsetX: this.state.offsetX + this.state.tmpOffsetX,
-        		offsetY: this.state.offsetY + this.state.tmpOffsetY,
-        		tmpOffsetX: 0,
-        		tmpOffsetY: 0
-        	});
-        });
+        this.refs.canvas.addEventListener('mousemove', e => {
+            if (this.state.drag_mode) {
+                let _viewport = Object.assign({}, this.state.viewport);
 
-        this.refs.canvas.addEventListener('mousemove', (e) => {
-        	if (this.state.draging) {
-	        		this.setState({
-	        		endDropX: e.clientX,
-	        		endDropY: e.clientY
-        		});
-	    		let _vec = this.calcMovingVector();
-
-	        	this.setState({
-	        		tmpOffsetX: _vec.x,
-	        		tmpOffsetY: _vec.y
-	    		});
-        	}
-        	
+                _viewport.position = {
+                    x: this.state.startViewportX + e.clientX - this.state.startDropX,
+                    y: this.state.startViewportY + e.clientY - this.state.startDropY
+                }
+                console.log(`Pos: [${_viewport.position.x},${_viewport.position.y}]`)
+                this.setState({
+                    viewport: _viewport
+                })
+            }
         });
     }
 
-    componentDidUpdate() {
-    	// console.log(this.state);
-    	this.renderMap();
+    toggleRendering() {
+        if(this.state.rendering) {
+            this.stopRendering()
+        } else {
+            this.startRendering()
+        }
     }
 
-    calculateMap() {
-	// 	// TODO: Move configs somewhere else120
-	// 	const TILES_SIZE = 1;
-	// 	const width = 20;
-	// 	const height = 20;
+    startRendering() {
+        if(!this.state.rendering) {
+            let _renderID = setInterval(this.renderMap, 15);
 
-	//     let _posx, _posy;
+            this.setState({
+                rendering: true,
+                renderId: _renderID
+            });    
+        }
+    }
 
-	    // Construct tiles
-	  
-	}
+    stopRendering() {
+        clearInterval(this.state.renderId);
+        this.setState({
+            rendering: false
+        });
+    }
 
-	renderMap() {
-		// TODO: Move tiles rendering to another layer - class
+    componentDidMount() {
+        // Set canvas context
+        this.refs.canvas.width = this.state.viewport.width;
+        this.refs.canvas.height = this.state.viewport.height;
+        this.ctx = this.refs.canvas.getContext('2d');
 
-		//Render
-		const images = [];
-		this.ctx.fillStyle = '#454';
-		this.ctx.fillRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
+        // Create WorldMap and MapRenderer
+                // Load images of tiles and construct worldMap after all are loaded
+        TileImages.loadImages()
+            .then(() => {
+                console.log('All images loaded');
+                let _worldMap = new WorldMap();
+                this.setState({
+                    worldMap: _worldMap,
+                    mapRenderer: new MapRenderer(this.ctx, _worldMap, this.state.viewport)
+                });
+                // this.startRendering();
+            });
 
-		let _calPos = (i, j) => {
-			return {
-				x: (((j % 2) ? (i * config.tile_width) : (i * config.tile_width - config.tile_width/2))) 
-				* this.state.scale + this.state.offsetX + this.state.tmpOffsetX,
-				y: ((j * (config.tile_height - config.tile_height/4 -1) - config.tile_height/3)) * 
-				this.state.scale + this.state.offsetY + this.state.tmpOffsetY
+        // Add event listeners for mouse moving
+        this.addEventListeners();
+        // setInterval(this.renderMap, 15);
+        // this.renderMap();
+    }
 
-			}
-		}
-		let _pos;
+    renderMap() {
+        this.setState({
+            indicator: this.state.indicator >= 2 ? 0 : this.state.indicator + 0.06
+        })
+
+        console.log('Map rendering ...');
+
+        // Draw green background
+        this.ctx.fillStyle = '#454';
+        this.ctx.fillRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
 
 
-		this.tiles.forEach(tile => {
-			_pos =  _calPos(tile.position.x, tile.position.y);
-			this.ctx.drawImage(tile.tileImage.image, _pos.x, _pos.y, config.tile_width * this.state.scale, config.tile_height * this.state.scale);
-		})
-	// 	this.tiles.forEach(tile => {
-	// 		this.ctx.drawImage(tile.image, tile.position.x, tile.position.y, tile.size.x, tile.size.y);
-	// 	});
+        // Render map tiles here
+        this.state.mapRenderer.redraw(this.state.viewport);
+
+        // Center position of viewport
+        this.ctx.fillStyle = 'red';
+        this.ctx.fillRect(this.state.viewport.position.x - 5, this.state.viewport.position.y - 5, 10, 10);
+
+        // Vector of dragging map
+        this.ctx.beginPath();
+
+        this.ctx.moveTo(this.state.startViewportX, this.state.startViewportY);
+        this.ctx.lineTo(this.state.viewport.position.x, this.state.viewport.position.y);
+
+        this.ctx.lineWidth = 5;
+        this.ctx.strokeStyle = 'blue';
+        this.ctx.stroke();
+
+        // Draw indicator -- TODO: This is temporary
+        this.ctx.moveTo(this.state.viewport.width - 100, this.state.viewport.height - 100);
+        this.ctx.arc(this.state.viewport.width - 100, this.state.viewport.height - 100, 20, this.state.indicator * Math.PI, (0.6 + this.state.indicator) * Math.PI);
+        this.ctx.strokeStyle = 'orange';
+        this.ctx.fill();
 }
 
 render() {
-	return (
-		<div className='canvas-container'>
-		<canvas ref='canvas'></canvas>
-		</div>
-		)
-}
+    return (
+        <div className='canvas-container'>
+        <canvas ref='canvas'></canvas>
+        <div>
+            <button ref='toggleRenderButton'>{this.state.rendering ? 'PAUSE' : 'START'}</button>
+            <button ref='renderButton'>RENDER ONCE</button>
+
+        </div>
+        </div>
+        )}
 }
