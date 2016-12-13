@@ -163,20 +163,6 @@ export default class Map extends Component {
         // Render map tiles here
         this.state.mapRenderer.redraw(this.state.viewport);
 
-        // // Center position of viewport
-        // this.ctx.fillStyle = 'red';
-        // this.ctx.fillRect(this.state.viewport.position.x - 5, this.state.viewport.position.y - 5, 10, 10);
-
-        // Vector of dragging map
-        this.ctx.beginPath();
-
-        this.ctx.moveTo(this.state.startViewportX, this.state.startViewportY);
-        this.ctx.lineTo(this.state.viewport.position.x, this.state.viewport.position.y);
-
-        this.ctx.lineWidth = 5;
-        this.ctx.strokeStyle = 'blue';
-        this.ctx.stroke();
-
         // Draw indicator -- TODO: This is temporary
         this.ctx.moveTo(this.state.viewport.width - 100, this.state.viewport.height - 100);
         this.ctx.arc(this.state.viewport.width - 100, this.state.viewport.height - 100, 20, this.state.indicator * Math.PI, (0.6 + this.state.indicator) * Math.PI);

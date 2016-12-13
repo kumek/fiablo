@@ -27,35 +27,37 @@ export default class Renderer {
 			y: Math.floor(viewport.position.y/config.tile_height)
 		}
 
+		let _numberOfTiles = {
+			x: Math.floor((viewport.width/config.tile_width)/2) -1,
+			y: Math.floor((viewport.height/config.tile_height)/2) -1
+		}
+
 		console.log(`Center tile calculated: [${_centerTileCords.x},${_centerTileCords.y}]`)
 
 		// this.map = this.worldMap.getMap(_centerTileCords.x, _centerTileCords.y, _centerTileCords.x+4, _centerTileCords.y+4);
-		this.map = this.worldMap.getMap();
+		this.map = this.worldMap.getMap(
+			_centerTileCords.x - _numberOfTiles.x,
+			_centerTileCords.y - _numberOfTiles.y,
+			_centerTileCords.x + _numberOfTiles.x,
+			_centerTileCords.y + _numberOfTiles.y)
+
 		console.log(this.map);
-
-		// Calculate better position because this sucks
-
-		// this.map.forEach(tilesRow => tilesRow.forEach( tile => {
-		// 	this.ctx.drawImage(tile.tileImage.image,
-		// 		(viewport.position.x + 400) - tile.cords.x * (config.tile_width) + (tile.cords.y % 2 ? 60 : 0), 
-		// 		(viewport.position.y + 400) - tile.cords.y * (config.tile_height - 20))
-		// 	// this.ctx.drawImage(tile.tileImage.image, viewport.position.x, viewport.position.y, config.tile_width, config.tile_height);
-		// }))
-
 
 		let startPos = {
 			x: - viewport.position.x + viewport.width/2,
 			y: - viewport.position.y + viewport.height/2
 		}
-		// let startPos = {
-		// 	x: 0,
-		// 	y: 0
-		// }
 
 		this.map.forEach(tilesRow => tilesRow.forEach( tile => {
+			let _tilePosition = {
+				x: startPos.x + (tile.cords.x * config.tile_width) + (tile.cords.y % 2 ? 60 : 0),
+				y: startPos.y + (tile.cords.y * config.tile_height)
+			}
 			this.ctx.drawImage(tile.tileImage.image,
-				startPos.x + (tile.cords.x * config.tile_width) + (tile.cords.y % 2 ? 60 : 0),
-				startPos.y + (tile.cords.y * config.tile_height));
+				_tilePosition.x,
+				_tilePosition.y);
+			this.ctx.font = "60px serif black";
+			this.ctx.fillText(tile.name, _tilePosition.x + 40, _tilePosition.y + 40);
 			// this.ctx.drawImage(tile.tileImage.image, viewport.position.x, viewport.position.y, config.tile_width, config.tile_height);
 		}));
 
