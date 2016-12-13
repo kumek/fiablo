@@ -4,13 +4,15 @@ import Tile from '../../models/terrain/tiles/tile';
 export default class WorldMap {
 	// WorldMap holds only data of entire map, no rendering data. Using only coordinates of tiles
 	constructor() {
+		let i,j;
 		this.tiles = [];
-		for(let i=0; i<config.WORLD_WIDTH; i++) {
+		for(i=0; i<config.WORLD_WIDTH; i++) {
 			this.tiles[i] = [];
-			for(let j=0; j<config.WORLD_HEIGHT; j++) {
+			for(j=0; j<config.WORLD_HEIGHT; j++) {
 				this.tiles[i][j] = new Tile({x: i, y: j});
 			}
 		}
+		console.log("DUPE");
 		this.boundaries = {
 			x: config.WORLD_WIDTH * config.TILE_WIDTH + config.TILE_WIDTH/2,
 			y: config.WORLD_HEIGHT * config.TILE_HEIGHT + config.TILE_HEIGHT/2

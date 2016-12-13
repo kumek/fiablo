@@ -22,19 +22,17 @@ const _urls = [
 ];
 const _images = [];
 
-const TileImages = (() => {
-	
-	_urls.forEach(url => _images.push(new TileImage(resources_url + url)));
+_urls.forEach(url => _images.push(new TileImage(resources_url + url)));
+console.log(_images)
 
-	return {
-		loadImages: () => {
-			return Promise.all(_images.map(img => img.load()));
-		},
+const TileImages = {
+	loadImages: () => {
+		return Promise.all(_images.map(img => img.load()));
+	},
 
-		getRandom: () => {
-			return _images[Math.floor(Math.random() * _images.length)];
-		}
+	getRandom: () => {
+		return _images[Math.floor(Math.random() * _images.length)];
 	}
-})();
+};
 
 export default TileImages;
