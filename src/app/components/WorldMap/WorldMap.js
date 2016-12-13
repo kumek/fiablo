@@ -1,5 +1,5 @@
 import config from '../../config';
-import Tile from '../../models/terrain/tiles/tile';
+import Tile from '../../models/terrain/tiles/Tile';
 
 export default class WorldMap {
 	// WorldMap holds only data of entire map, no rendering data. Using only coordinates of tiles
