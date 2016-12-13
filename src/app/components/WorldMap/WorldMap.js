@@ -11,6 +11,10 @@ export default class WorldMap {
 				this.tiles[i][j] = new Tile({x: i, y: j});
 			}
 		}
+		this.boundaries = {
+			x: config.WORLD_WIDTH * config.tile_width + config.tile_width/2,
+			y: config.WORLD_HEIGHT * config.tile_height + config.tile_height/2
+		}
 	}
 
 	// Get particular rectangle region, or complete world if cords are not specified
@@ -19,9 +23,13 @@ export default class WorldMap {
 		for(let i=0; i<endX-startX+1; i++) {
 			_tmpResponse[i] = [];
 			for(let j=0; j<endY-startY+1; j++) {
-				_tmpResponse[i][j] = this.tiles[i+startX][j+startY];
+				_tmpResponse[i][j] = this.tiles[i+startX] ? this.tiles[i+startX][j+startY] : undefined;
 			}
 		}
 		return _tmpResponse;
+	}
+
+	getBoundaries() {
+		return this.boundaries
 	}
 }

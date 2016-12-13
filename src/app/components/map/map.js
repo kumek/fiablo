@@ -37,12 +37,11 @@ export default class Map extends Component {
     }
 
     onStartDragging(e) {
-        console.log(e);
         this.setState({
             drag_mode: true,
             startDropX: e.clientX,
             startDropY: e.clientY,
-            startViewportX: this.state.viewport.position.x || 400,
+            startViewportX: this.state.viewport.position.x || 700,
             startViewportY: this.state.viewport.position.y || 400 
         });
     }
@@ -67,13 +66,14 @@ export default class Map extends Component {
     onDragging(e) {
         if (this.state.drag_mode) {
             let _viewport = Object.assign({}, this.state.viewport);
-
-
+            let _tmpX = this.state.startViewportX - (e.clientX - this.state.startDropX);
+            let _tmpY = this.state.startViewportY - (e.clientY - this.state.startDropY);
             _viewport.position = {
-                x: this.state.startViewportX - (e.clientX - this.state.startDropX),
-                y: this.state.startViewportY - (e.clientY - this.state.startDropY)
+                x: ((_tmpX < _viewport.halfWidth) || (_tmpX > (this.state.worldMap.getBoundaries().x - _viewport.halfWidth))) ? _viewport.position.x : _tmpX,
+                y: ((_tmpY < _viewport.halfHeight) || (_tmpY > (this.state.worldMap.getBoundaries().y - _viewport.halfHeight))) ? _viewport.position.y : _tmpY
             }
             console.log(`Pos: [${_viewport.position.x},${_viewport.position.y}]`)
+
             this.setState({
                 viewport: _viewport
             })
@@ -88,14 +88,10 @@ export default class Map extends Component {
         })
 
         this.refs.canvas.addEventListener('mousedown', this.onStartDragging);
-        this.refs.canvas.addEventListener('touchstart', this.onStartDragging);
 
         this.refs.canvas.addEventListener('mouseup', this.onEndDragging);
-        this.refs.canvas.addEventListener('touchend', this.onEndDragging);
-        this.refs.canvas.addEventListener('touchcancel', this.onEndDragging);
 
         this.refs.canvas.addEventListener('mousemove', this.onDragging);
-        this.refs.canvas.addEventListener('touchmove', this.onDragging);
     }
 
     toggleRendering() {
@@ -138,25 +134,37 @@ export default class Map extends Component {
                 let _worldMap = new WorldMap();
                 this.setState({
                     worldMap: _worldMap,
+                    viewport: {
+                        width: this.state.viewport.width,
+                        halfWidth: this.state.viewport.width/2,
+
+                        height: this.state.viewport.height,
+                        halfHeight: this.state.viewport.height/2,
+
+                        position: {
+                            x: _worldMap.getBoundaries().x/2,
+                            y: _worldMap.getBoundaries().y/2
+                        }
+                    },
                     mapRenderer: new MapRenderer(this.ctx, _worldMap, this.state.viewport)
                 });
                 // this.startRendering();
+                this.renderMap();
             });
 
         // Add event listeners for mouse moving
         this.addEventListeners();
         // setInterval(this.renderMap, 15);
-        this.renderMap();
     }
 
     renderMap() {
         window.requestAnimationFrame(this.renderMap);
-        
+
         this.setState({
             indicator: this.state.indicator >= 2 ? 0 : this.state.indicator + 0.06
         })
 
-        console.log('Map rendering ...');
+        // console.log('Map rendering ...');
 
         // Draw green background
         this.ctx.fillStyle = '#454';
