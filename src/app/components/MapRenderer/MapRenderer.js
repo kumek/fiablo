@@ -9,10 +9,9 @@ export default class Renderer {
 		this.viewport = viewport;
 
 		this.numberOfTiles = {
-			x: Math.floor((viewport.width/config.TILE_WIDTH)/2) +1,
-			y: Math.floor((viewport.height/config.TILE_HEIGHT)/2) +1
+			x: Math.floor((viewport.width/config.TILE_WIDTH)/2) +2,
+			y: Math.floor((viewport.height/config.TILE_HEIGHT)/2) +2
 		}
-		console.log(this.numberOfTiles);
 	}
 
 	render() {

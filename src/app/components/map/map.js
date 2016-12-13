@@ -14,8 +14,8 @@ export default class Map extends Component {
         this.state = {
             indicator: 0,
             viewport: {
-                width: 800,
-                height: 800
+                width: window.innerWidth,
+                height: window.innerHeight
             },
             rendering: true,
         };
@@ -74,6 +74,18 @@ export default class Map extends Component {
     }
 
     addEventListeners() {
+        window.addEventListener('resize', e => {
+            let viewport = Object.assign({}, this.state.viewport, {
+                width: window.innerWidth,
+                height: window.innerHeight
+            })
+            this.refs.canvas.width = window.innerWidth;
+            this.refs.canvas.height = window.innerHeight;
+            this.setState({
+                viewport
+            })
+        });
+
         this.refs.canvas.addEventListener('mousedown', this.onStartDragging);
 
         this.refs.canvas.addEventListener('mouseup', this.onEndDragging);
