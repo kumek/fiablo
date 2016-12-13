@@ -23,7 +23,7 @@ export default class Map extends Component {
                     y: 400
                 }
             },
-            rendering: false,
+            rendering: true,
         };
         
         // Bind context of functions
@@ -67,6 +67,7 @@ export default class Map extends Component {
     onDragging(e) {
         if (this.state.drag_mode) {
             let _viewport = Object.assign({}, this.state.viewport);
+
 
             _viewport.position = {
                 x: this.state.startViewportX - (e.clientX - this.state.startDropX),
@@ -145,10 +146,12 @@ export default class Map extends Component {
         // Add event listeners for mouse moving
         this.addEventListeners();
         // setInterval(this.renderMap, 15);
-        // this.renderMap();
+        this.renderMap();
     }
 
     renderMap() {
+        window.requestAnimationFrame(this.renderMap);
+        
         this.setState({
             indicator: this.state.indicator >= 2 ? 0 : this.state.indicator + 0.06
         })
@@ -163,11 +166,30 @@ export default class Map extends Component {
         // Render map tiles here
         this.state.mapRenderer.redraw(this.state.viewport);
 
+        // // Center position of viewport
+        // this.ctx.fillStyle = 'red';
+        // this.ctx.fillRect(this.state.viewport.position.x - 5, this.state.viewport.position.y - 5, 10, 10);
+
+        // Vector of dragging map
+        this.ctx.beginPath();
+
+        // this.ctx.moveTo(this.state.startViewportX, this.state.startViewportY);
+        // this.ctx.lineTo(this.state.viewport.position.x, this.state.viewport.position.y);
+
+        // this.ctx.lineWidth = 5;
+        // this.ctx.strokeStyle = 'blue';
+        // this.ctx.stroke();
+
         // Draw indicator -- TODO: This is temporary
         this.ctx.moveTo(this.state.viewport.width - 100, this.state.viewport.height - 100);
         this.ctx.arc(this.state.viewport.width - 100, this.state.viewport.height - 100, 20, this.state.indicator * Math.PI, (0.6 + this.state.indicator) * Math.PI);
-        this.ctx.strokeStyle = 'orange';
+        this.ctx.lineTo(this.state.viewport.width - 100, this.state.viewport.height - 100);
+        this.ctx.fillStyle = "#B2BDBD";
+        this.ctx.lineWidth = 5;
+        this.ctx.strokeStyle = '#BE8145';
+        this.ctx.stroke();
         this.ctx.fill();
+
 }
 
 render() {
