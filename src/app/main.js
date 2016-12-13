@@ -6,3 +6,4 @@ import config from './config';
 
 console.log(config);
 ReactDOM.render(<App />, document.getElementById('app'));
+document.body.requestFullscreen();

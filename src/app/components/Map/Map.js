@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Tile from '../../models/terrain/tiles/tile';
+import Tile from '../../models/terrain/tiles/Tile';
 import TileImages from '../../resources/TileImages';
 import WorldMap from '../WorldMap/WorldMap';
 import MapRenderer from '../MapRenderer/MapRenderer';
@@ -74,6 +74,10 @@ export default class Map extends Component {
     }
 
     addEventListeners() {
+        this.refs.canvas.addEventListener('click', e => {
+            document.body.webkitRequestFullScreen();
+        })
+
         window.addEventListener('resize', e => {
             let viewport = Object.assign({}, this.state.viewport, {
                 width: window.innerWidth,
@@ -162,7 +166,7 @@ export default class Map extends Component {
 render() {
     return (
         <div className='canvas-container'>
-        <canvas ref='canvas'></canvas>
+        <canvas ref='canvas' onClick={function(e) {e.target.requestFullscreen()}}></canvas>
         </div>
         )}
 }
