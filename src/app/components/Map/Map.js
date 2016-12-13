@@ -31,8 +31,8 @@ export default class Map extends Component {
     onStartDragging(e) {
         this.setState({
             drag_mode: true,
-            startDropX: e.clientX,
-            startDropY: e.clientY,
+            startDropX: e.clientX || e.changedTouches[0].clientX,
+            startDropY: e.clientY || e.changedTouches[0].clientY,
             startViewportX: this.state.viewport.position.x,
             startViewportY: this.state.viewport.position.y
         });
@@ -59,8 +59,8 @@ export default class Map extends Component {
     onDragging(e) {
         if (this.state.drag_mode) {
             let _viewport = Object.assign({}, this.state.viewport);
-            let _tmpX = this.state.startViewportX - (e.clientX - this.state.startDropX);
-            let _tmpY = this.state.startViewportY - (e.clientY - this.state.startDropY);
+            let _tmpX = this.state.startViewportX - (e.clientX || e.changedTouches[0].clientX - this.state.startDropX);
+            let _tmpY = this.state.startViewportY - (e.clientY || e.changedTouches[0].clientY - this.state.startDropY);
             _viewport.position = {
                 x: ((_tmpX < _viewport.halfWidth) || (_tmpX > (this.state.worldMap.getBoundaries().x - _viewport.halfWidth))) ? _viewport.position.x : _tmpX,
                 y: ((_tmpY < _viewport.halfHeight) || (_tmpY > (this.state.worldMap.getBoundaries().y - _viewport.halfHeight))) ? _viewport.position.y : _tmpY
@@ -90,11 +90,25 @@ export default class Map extends Component {
             })
         });
 
+        this.refs.canvas.addEventListener('touchstart', e => {
+            console.log('Touchstart');
+            console.log(e);
+        });
+
+        this.refs.canvas.addEventListener('touchend', e => {
+            console.log('Touchend');
+            console.log(e);
+        });
+
         this.refs.canvas.addEventListener('mousedown', this.onStartDragging);
+        this.refs.canvas.addEventListener('touchstart', this.onStartDragging);
 
         this.refs.canvas.addEventListener('mouseup', this.onEndDragging);
+        this.refs.canvas.addEventListener('touchend', this.onEndDragging);
 
         this.refs.canvas.addEventListener('mousemove', this.onDragging);
+        this.refs.canvas.addEventListener('touchmove', this.onDragging);
+
     }
 
     componentDidMount() {
@@ -166,7 +180,7 @@ export default class Map extends Component {
 render() {
     return (
         <div className='canvas-container'>
-        <canvas ref='canvas' onClick={function(e) {e.target.requestFullscreen()}}></canvas>
+        <canvas ref='canvas'></canvas>
         </div>
         )}
 }
