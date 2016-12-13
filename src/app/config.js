@@ -1,12 +1,12 @@
 const config = {
-	WORLD_HEIGHT: 20,
-	WORLD_WIDTH: 20,
-	tile_height: 100,
-	tile_width: 120,
+	WORLD_HEIGHT: 1000,
+	WORLD_WIDTH: 1000,
+	TILE_HEIGHT: 100,
+	TILE_WIDTH: 120,
 
-	map_scale: 0.8,
+	MAP_SCALE: 0.8,
 
-	map_type: 'GRASS'
+	MAP_TYPE: 'GRASS'
 }
 
 export default config;

@@ -7,6 +7,12 @@ export default class Renderer {
 		this.ctx = ctx;
 		this.worldMap = worldMap;
 		this.viewport = viewport;
+
+		this.numberOfTiles = {
+			x: Math.floor((viewport.width/config.TILE_WIDTH)/2) +1,
+			y: Math.floor((viewport.height/config.TILE_HEIGHT)/2) +1
+		}
+		console.log(this.numberOfTiles);
 	}
 
 	render() {
@@ -14,36 +20,22 @@ export default class Renderer {
 	}
 
 	redraw(viewport) {
-		// STAGE 1 - Render only center tile
-		// Takes new parameters and redraws map
+		// Takes new viewport and redraws map
 		this.viewport = viewport;
-
-		// Get tiles proper to viewport
-
 
 		// Get cords of center tile to get neighbourhood
 		let _centerTileCords = {
-			x: Math.floor(viewport.position.x/config.tile_width),
-			y: Math.floor(viewport.position.y/config.tile_height)
+			x: Math.floor(viewport.position.x/config.TILE_WIDTH),
+			y: Math.floor(viewport.position.y/config.TILE_HEIGHT)
 		}
 
-		let _numberOfTiles = {
-			x: Math.floor((viewport.width/config.tile_width)/2) +2,
-			y: Math.floor((viewport.height/config.tile_height)/2) +2
-		}
-
-		// console.log(`Center tile calculated: [${_centerTileCords.x},${_centerTileCords.y}]`)
-
-		// this.map = this.worldMap.getMap(_centerTileCords.x, _centerTileCords.y, _centerTileCords.x+4, _centerTileCords.y+4);
 		this.map = this.worldMap.getMap(
-			(_centerTileCords.x - _numberOfTiles.x) || 0,
-			(_centerTileCords.y - _numberOfTiles.y) || 0,
-			_centerTileCords.x + _numberOfTiles.x,
-			_centerTileCords.y + _numberOfTiles.y)
+			(_centerTileCords.x - this.numberOfTiles.x) || 0,
+			(_centerTileCords.y - this.numberOfTiles.y) || 0,
+			_centerTileCords.x + this.numberOfTiles.x,
+			_centerTileCords.y + this.numberOfTiles.y)
 
-		// console.log(this.map);
-
-		let startPos = {
+		let _startPos = {
 			x: - viewport.position.x + viewport.width/2,
 			y: - viewport.position.y + viewport.height/2
 		}
@@ -51,29 +43,29 @@ export default class Renderer {
 		this.map.forEach(tilesRow => tilesRow.forEach( tile => {
 			if(tile) {
 				let _tilePosition = {
-					x: startPos.x + (tile.cords.x * config.tile_width) + (tile.cords.y % 2 ? 60 : 0),
-					y: startPos.y + (tile.cords.y * config.tile_height)
+					x: _startPos.x + (tile.cords.x * config.TILE_WIDTH) + (tile.cords.y % 2 ? 60 : 0),
+					y: _startPos.y + (tile.cords.y * config.TILE_HEIGHT)
 				}
 				this.ctx.drawImage(tile.tileImage.image,
 					_tilePosition.x,
 					_tilePosition.y);
-				this.ctx.font = "60px serif black";
+				this.ctx.font = "60 serif black";
 				this.ctx.fillText(tile.name, _tilePosition.x + 40, _tilePosition.y + 40);	
 			}
 		}));
 
 		// Stroke center tile
 		this.ctx.strokeRect(
-			startPos.x + (_centerTileCords.x * config.tile_width) + (_centerTileCords.y % 2 ? 60 : 0),
-			startPos.y + (_centerTileCords.y * config.tile_height),
-			config.tile_width,
-			config.tile_height
+			_startPos.x + (_centerTileCords.x * config.TILE_WIDTH) + (_centerTileCords.y % 2 ? 60 : 0),
+			_startPos.y + (_centerTileCords.y * config.TILE_HEIGHT),
+			config.TILE_WIDTH,
+			config.TILE_HEIGHT
 			);
 
 
 		// Draw where the center of view is pointing
         this.ctx.fillStyle = 'red';
-        this.ctx.fillRect(startPos.x + viewport.position.x - 5, startPos.y + viewport.position.y - 5, 10, 10);
+        this.ctx.fillRect(_startPos.x + viewport.position.x - 5, _startPos.y + viewport.position.y - 5, 10, 10);
 
 			
 	}

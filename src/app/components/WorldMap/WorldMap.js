@@ -12,8 +12,8 @@ export default class WorldMap {
 			}
 		}
 		this.boundaries = {
-			x: config.WORLD_WIDTH * config.tile_width + config.tile_width/2,
-			y: config.WORLD_HEIGHT * config.tile_height + config.tile_height/2
+			x: config.WORLD_WIDTH * config.TILE_WIDTH + config.TILE_WIDTH/2,
+			y: config.WORLD_HEIGHT * config.TILE_HEIGHT + config.TILE_HEIGHT/2
 		}
 	}
 

@@ -8,20 +8,14 @@ import config from '../../config';
 
 export default class Map extends Component {
     constructor(props) {
-        let _state;
         super(props);
 
         // Set initial state of map
         this.state = {
-            scale: props.scale || config.map_scale,
             indicator: 0,
             viewport: {
                 width: 800,
-                height: 800,
-                position: {
-                    x: 400,
-                    y: 400
-                }
+                height: 800
             },
             rendering: true,
         };
@@ -29,8 +23,6 @@ export default class Map extends Component {
         // Bind context of functions
         this.renderMap = this.renderMap.bind(this);
         this.addEventListeners = this.addEventListeners.bind(this);
-        this.startRendering = this.startRendering.bind(this);
-        this.stopRendering = this.stopRendering.bind(this);
         this.onStartDragging = this.onStartDragging.bind(this);
         this.onEndDragging = this.onEndDragging.bind(this);
         this.onDragging = this.onDragging.bind(this);
@@ -41,17 +33,18 @@ export default class Map extends Component {
             drag_mode: true,
             startDropX: e.clientX,
             startDropY: e.clientY,
-            startViewportX: this.state.viewport.position.x || 700,
-            startViewportY: this.state.viewport.position.y || 400 
+            startViewportX: this.state.viewport.position.x,
+            startViewportY: this.state.viewport.position.y
         });
     }
 
     onEndDragging(e) {
         let _viewport = Object.assign({}, this.state.viewport);
         _viewport.position = {
-            x: this.state.viewport.position.x + this.state.tmpOffsetX,
-            y: this.state.viewport.position.y + this.state.tmpOffsetY
+            x: this.state.viewport.position.x + (this.state.tmpOffsetX || 0),
+            y: this.state.viewport.position.y + (this.state.tmpOffsetY || 0)
         }
+        console.log('onEndDragging: ', _viewport);
 
         this.setState({
             drag_mode: false,
@@ -81,43 +74,11 @@ export default class Map extends Component {
     }
 
     addEventListeners() {
-        this.refs.renderButton.addEventListener('click', this.renderMap)
-
-        this.refs.toggleRenderButton.addEventListener('click', () => {
-            this.toggleRendering();
-        })
-
         this.refs.canvas.addEventListener('mousedown', this.onStartDragging);
 
         this.refs.canvas.addEventListener('mouseup', this.onEndDragging);
 
         this.refs.canvas.addEventListener('mousemove', this.onDragging);
-    }
-
-    toggleRendering() {
-        if(this.state.rendering) {
-            this.stopRendering()
-        } else {
-            this.startRendering()
-        }
-    }
-
-    startRendering() {
-        if(!this.state.rendering) {
-            let _renderID = setInterval(this.renderMap, 15);
-
-            this.setState({
-                rendering: true,
-                renderId: _renderID
-            });    
-        }
-    }
-
-    stopRendering() {
-        clearInterval(this.state.renderId);
-        this.setState({
-            rendering: false
-        });
     }
 
     componentDidMount() {
@@ -148,13 +109,11 @@ export default class Map extends Component {
                     },
                     mapRenderer: new MapRenderer(this.ctx, _worldMap, this.state.viewport)
                 });
-                // this.startRendering();
+                // Start rendering map
                 this.renderMap();
+                // Add event listeners for mouse moving
+                this.addEventListeners();
             });
-
-        // Add event listeners for mouse moving
-        this.addEventListeners();
-        // setInterval(this.renderMap, 15);
     }
 
     renderMap() {
@@ -164,8 +123,6 @@ export default class Map extends Component {
             indicator: this.state.indicator >= 2 ? 0 : this.state.indicator + 0.06
         })
 
-        // console.log('Map rendering ...');
-
         // Draw green background
         this.ctx.fillStyle = '#454';
         this.ctx.fillRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
@@ -174,19 +131,9 @@ export default class Map extends Component {
         // Render map tiles here
         this.state.mapRenderer.redraw(this.state.viewport);
 
-        // // Center position of viewport
-        // this.ctx.fillStyle = 'red';
-        // this.ctx.fillRect(this.state.viewport.position.x - 5, this.state.viewport.position.y - 5, 10, 10);
-
         // Vector of dragging map
         this.ctx.beginPath();
 
-        // this.ctx.moveTo(this.state.startViewportX, this.state.startViewportY);
-        // this.ctx.lineTo(this.state.viewport.position.x, this.state.viewport.position.y);
-
-        // this.ctx.lineWidth = 5;
-        // this.ctx.strokeStyle = 'blue';
-        // this.ctx.stroke();
 
         // Draw indicator -- TODO: This is temporary
         this.ctx.moveTo(this.state.viewport.width - 100, this.state.viewport.height - 100);
@@ -204,11 +151,6 @@ render() {
     return (
         <div className='canvas-container'>
         <canvas ref='canvas'></canvas>
-        <div>
-            <button ref='toggleRenderButton'>{this.state.rendering ? 'PAUSE' : 'START'}</button>
-            <button ref='renderButton'>RENDER ONCE</button>
-
-        </div>
         </div>
         )}
 }
