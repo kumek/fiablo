@@ -1,7 +1,7 @@
 const config = {
-	WORLD_HEIGHT: 100,
-	WORLD_WIDTH: 100,
-	tile_height: 120,
+	WORLD_HEIGHT: 30,
+	WORLD_WIDTH: 30,
+	tile_height: 100,
 	tile_width: 120,
 
 	map_scale: 0.8,
