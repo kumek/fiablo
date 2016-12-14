@@ -59,8 +59,8 @@ export default class Map extends Component {
     onDragging(e) {
         if (this.state.drag_mode) {
             let _viewport = Object.assign({}, this.state.viewport);
-            let _tmpX = this.state.startViewportX - (e.clientX || e.changedTouches[0].clientX - this.state.startDropX);
-            let _tmpY = this.state.startViewportY - (e.clientY || e.changedTouches[0].clientY - this.state.startDropY);
+            let _tmpX = this.state.startViewportX - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDropX);
+            let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY);
             _viewport.position = {
                 x: ((_tmpX < _viewport.halfWidth) || (_tmpX > (this.state.worldMap.getBoundaries().x - _viewport.halfWidth))) ? _viewport.position.x : _tmpX,
                 y: ((_tmpY < _viewport.halfHeight) || (_tmpY > (this.state.worldMap.getBoundaries().y - _viewport.halfHeight))) ? _viewport.position.y : _tmpY
@@ -74,8 +74,12 @@ export default class Map extends Component {
     }
 
     addEventListeners() {
-        this.refs.canvas.addEventListener('click', e => {
-            document.body.webkitRequestFullScreen();
+        this.refs.canvas.addEventListener('dblclick', e => {
+            if(document.webkitFullscreenElement == undefined) {
+                document.body.webkitRequestFullScreen();  
+            } else {
+                document.webkitExitFullscreen();
+            }
         })
 
         window.addEventListener('resize', e => {
