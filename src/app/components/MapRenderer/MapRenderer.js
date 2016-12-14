@@ -63,6 +63,8 @@ export default class Renderer {
 
 
 		// Draw where the center of view is pointing
+		this.ctx.strokeStyle = '#BE8145';
+		this.ctx.lineWidth = 3;
         this.ctx.fillStyle = 'red';
         this.ctx.fillRect(_startPos.x + viewport.position.x - 5, _startPos.y + viewport.position.y - 5, 10, 10);
 
