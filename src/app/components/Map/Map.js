@@ -15,7 +15,8 @@ export default class Map extends Component {
             indicator: 0,
             viewport: {
                 width: window.innerWidth,
-                height: window.innerHeight
+                height: window.innerHeight,
+                scale: config.MAP_SCALE,
             },
             rendering: true,
         };
@@ -26,6 +27,7 @@ export default class Map extends Component {
         this.onStartDragging = this.onStartDragging.bind(this);
         this.onEndDragging = this.onEndDragging.bind(this);
         this.onDragging = this.onDragging.bind(this);
+        this.onScroll = this.onScroll.bind(this);
     }
 
     onStartDragging(e) {
@@ -73,6 +75,14 @@ export default class Map extends Component {
         }
     }
 
+    onScroll(e) {
+        let scale = this.state.viewport.scale + (e.deltaY/2000);
+
+        this.setState({
+            viewport: Object.assign({}, this.state.viewport, { scale: scale < 0.1 ? 0.1 : scale })
+        })
+    }
+
     addEventListeners() {
         this.refs.canvas.addEventListener('dblclick', e => {
             if(document.webkitFullscreenElement == undefined) {
@@ -113,6 +123,8 @@ export default class Map extends Component {
         this.refs.canvas.addEventListener('mousemove', this.onDragging);
         this.refs.canvas.addEventListener('touchmove', this.onDragging);
 
+        this.refs.canvas.addEventListener('mousewheel', this.onScroll);
+
     }
 
     componentDidMount() {
@@ -139,7 +151,8 @@ export default class Map extends Component {
                         position: {
                             x: _worldMap.getBoundaries().x/2,
                             y: _worldMap.getBoundaries().y/2
-                        }
+                        },
+                        scale: this.state.viewport.scale
                     },
                     mapRenderer: new MapRenderer(this.ctx, _worldMap, this.state.viewport)
                 });
