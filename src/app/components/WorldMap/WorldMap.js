@@ -20,7 +20,7 @@ export default class WorldMap {
 	}
 
 	// Get particular rectangle region, or complete world if cords are not specified
-	getMap(startX = 0, startY = 0, endX = config.WORLD_WIDTH-1, endY = config.WORLD_HEIGHT-1) {
+	getMap([startX = 0, startY = 0, endX = config.WORLD_WIDTH-1, endY = config.WORLD_HEIGHT-1]) {
 		let _tmpResponse = [];
 		for(let i=0; i<endX-startX+1; i++) {
 			_tmpResponse[i] = [];

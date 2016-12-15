@@ -46,7 +46,7 @@ export default class Map extends Component {
             x: this.state.viewport.position.x + (this.state.tmpOffsetX || 0),
             y: this.state.viewport.position.y + (this.state.tmpOffsetY || 0)
         }
-        console.log('onEndDragging: ', _viewport);
+        // console.log('onEndDragging: ', _viewport);
 
         this.setState({
             drag_mode: false,
@@ -64,10 +64,14 @@ export default class Map extends Component {
             let _tmpX = this.state.startViewportX - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDropX);
             let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY);
             _viewport.position = {
-                x: ((_tmpX < _viewport.halfWidth) || (_tmpX > (this.state.worldMap.getBoundaries().x - _viewport.halfWidth))) ? _viewport.position.x : _tmpX,
-                y: ((_tmpY < _viewport.halfHeight) || (_tmpY > (this.state.worldMap.getBoundaries().y - _viewport.halfHeight))) ? _viewport.position.y : _tmpY
+                x: _tmpX,
+                y: _tmpY
             }
-            console.log(`Pos: [${_viewport.position.x},${_viewport.position.y}]`)
+            // _viewport.position = {
+            //     x: ((_tmpX < _viewport.halfWidth) || (_tmpX > (this.state.worldMap.getBoundaries().x*this.viewport.scale - _viewport.halfWidth))) ? _viewport.position.x : _tmpX,
+            //     y: ((_tmpY < _viewport.halfHeight) || (_tmpY > (this.state.worldMap.getBoundaries().y*this.viewport.scale - _viewport.halfHeight))) ? _viewport.position.y : _tmpY
+            // }
+            // console.log(`Pos: [${_viewport.position.x},${_viewport.position.y}]`)
 
             this.setState({
                 viewport: _viewport
@@ -134,7 +138,7 @@ export default class Map extends Component {
         this.ctx = this.refs.canvas.getContext('2d');
 
         // Create WorldMap and MapRenderer
-                // Load images of tiles and construct worldMap after all are loaded
+        // Load images of tiles and construct worldMap after all are loaded
         TileImages.loadImages()
             .then(() => {
                 console.log('All images loaded');
