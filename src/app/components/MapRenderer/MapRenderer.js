@@ -11,6 +11,9 @@ export default class Renderer {
 		this.centerTileCords = this.centerTileCords.bind(this);
 		this.numberOfTilesVisible = this.numberOfTilesVisible.bind(this);
 		this.startDrawingPosition = this.startDrawingPosition.bind(this);
+		this.calculateTilePosition = this.calculateTilePosition.bind(this);
+		this.strokeTile = this.strokeTile.bind(this);
+		this.drawTile = this.drawTile.bind(this);
 	}
 
 	render() {
@@ -47,17 +50,49 @@ export default class Renderer {
 		}
 	}
 
+
+	calculateTilePosition(tileCords, startPosition) {
+		return {
+			x: startPosition.x + (tileCords.x * config.TILE_WIDTH * this.viewport.scale) + (tileCords.y % 2 ? (60 * this.viewport.scale) : 0),
+			y: startPosition.y + (tileCords.y * config.TILE_HEIGHT * this.viewport.scale * 0.73)
+		}
+	}
+
 	drawTile(tile, startPosition) {
-		let _tilePosition = {
-					x: startPosition.x + (tile.cords.x * config.TILE_WIDTH * this.viewport.scale) + (tile.cords.y % 2 ? (60 * this.viewport.scale) : 0),
-					y: startPosition.y + (tile.cords.y * config.TILE_HEIGHT * this.viewport.scale * 0.73)
-				}
-		this.ctx.drawImage(tile.tileImage.image,
-			_tilePosition.x,
-			_tilePosition.y,
+		let {x, y} = this.calculateTilePosition(tile.cords, startPosition);
+		this.ctx.drawImage(tile.tileImage.image, x, y,
 			config.TILE_WIDTH * this.viewport.scale,
 			config.TILE_HEIGHT * this.viewport.scale
 		);
+	}
+
+	strokeTile(centerTileCords, startPosition) {
+		let {x ,y} = this.calculateTilePosition(centerTileCords, startPosition);
+		let _differenceHeight = config.TILE_HEIGHT * this.viewport.scale - (config.TILE_HEIGHT * this.viewport.scale * 0.75);
+		let _halfWidth = config.TILE_WIDTH * this.viewport.scale * 0.5;
+		let _width = config.TILE_WIDTH * this.viewport.scale;
+		let _height = config.TILE_HEIGHT * this.viewport.scale;
+
+		this.ctx.strokeStyle = '#125F32';
+		this.ctx.lineWidth = 7;
+		this.ctx.beginPath();
+		this.ctx.moveTo(x + _halfWidth, y);
+		this.ctx.lineTo(x + _width, y + _differenceHeight);
+		this.ctx.lineTo(x + _width, y + _height - _differenceHeight);
+		this.ctx.lineTo(x + _halfWidth, y + _height);
+		this.ctx.lineTo(x, y + _height - _differenceHeight);
+		this.ctx.lineTo(x, y + _differenceHeight);
+		this.ctx.lineTo(x + _halfWidth, y);
+		this.ctx.closePath();
+		this.ctx.stroke();
+		// this.ctx.strokeRect(
+		// 	x,
+		// 	y,
+		// 	// _startPos.x + (startPosition.x * config.TILE_WIDTH * this.viewport.scale) + (startPosition.y % 2 ? (60 * this.viewport.scale) : 0),
+		// 	// _startPos.y + (startPosition.y * config.TILE_HEIGHT * this.viewport.scale * 0.73),
+		// 	config.TILE_WIDTH * this.viewport.scale,
+		// 	config.TILE_HEIGHT * this.viewport.scale
+		// );
 	}
 
 	redraw(viewport) {
@@ -87,12 +122,7 @@ export default class Renderer {
 		}));
 
 		// Stroke center tile
-		this.ctx.strokeRect(
-			_startPos.x + (_centerTileCords.x * config.TILE_WIDTH * this.viewport.scale) + (_centerTileCords.y % 2 ? (60 * this.viewport.scale) : 0),
-			_startPos.y + (_centerTileCords.y * config.TILE_HEIGHT * this.viewport.scale * 0.73),
-			config.TILE_WIDTH * this.viewport.scale,
-			config.TILE_HEIGHT * this.viewport.scale
-			);
+		this.strokeTile(_centerTileCords, _startPos);
 
 		// Draw starting position
 		this.ctx.fillStyle = 'yellow';
@@ -100,8 +130,7 @@ export default class Renderer {
 
 
 		// Draw where the center of view is pointing
-		this.ctx.strokeStyle = '#BE8145';
-		this.ctx.lineWidth = 3;
+		
         this.ctx.fillStyle = 'red';
         this.ctx.fillRect(_startPos.x + (viewport.position.x * this.viewport.scale) - 5, _startPos.y + (viewport.position.y * this.viewport.scale * 0.73) - 5, 10, 10);
 
