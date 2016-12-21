@@ -85,21 +85,12 @@ export default class Renderer {
 		this.ctx.lineTo(x + _halfWidth, y);
 		this.ctx.closePath();
 		this.ctx.stroke();
-		// this.ctx.strokeRect(
-		// 	x,
-		// 	y,
-		// 	// _startPos.x + (startPosition.x * config.TILE_WIDTH * this.viewport.scale) + (startPosition.y % 2 ? (60 * this.viewport.scale) : 0),
-		// 	// _startPos.y + (startPosition.y * config.TILE_HEIGHT * this.viewport.scale * 0.73),
-		// 	config.TILE_WIDTH * this.viewport.scale,
-		// 	config.TILE_HEIGHT * this.viewport.scale
-		// );
+
 	}
 
 	redraw(viewport) {
 		// Takes new viewport and redraws map
 		this.viewport = viewport;
-
-		// console.log(viewport.scale);
 
 		// Get cords of center tile to get neighbourhood
 		let _centerTileCords = this.centerTileCords();
