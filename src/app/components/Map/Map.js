@@ -19,6 +19,7 @@ export default class Map extends Component {
                 scale: config.MAP_SCALE,
             },
             rendering: true,
+            cursor: {}
         };
         
         // Bind context of functions
@@ -59,12 +60,18 @@ export default class Map extends Component {
     }
 
     onDragging(e) {
-        console.log(this.state.viewport.position);
-        
+        let cursor = {
+            x: this.state.viewport.position.x - (this.state.viewport.halfWidth - e.clientX) * this.state.viewport.scale,
+            y: this.state.viewport.position.y - (this.state.viewport.halfHeight - e.clientY) * this.state.viewport.scale
+        }
+
+        this.setState({ cursor });
+        console.log(cursor);
+
         if (this.state.drag_mode) {
             let _viewport = Object.assign({}, this.state.viewport);
             let _tmpX = this.state.startViewportX - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDropX)/this.state.viewport.scale;
-            let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY)/this.state.viewport.scale;
+            let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY)/this.state.viewport.scale/0.73;
             _viewport.position = {
                 x: _tmpX,
                 y: _tmpY
@@ -91,7 +98,7 @@ export default class Map extends Component {
 
     addEventListeners() {
         this.refs.canvas.addEventListener('dblclick', e => {
-            if(document.webkitFullscreenElement == undefined) {
+            if (document.webkitFullscreenElement == undefined) {
                 document.body.webkitRequestFullScreen();  
             } else {
                 document.webkitExitFullscreen();

@@ -88,7 +88,7 @@ export default class Renderer {
 
 	}
 
-	redraw(viewport) {
+	redraw(viewport, cursor) {
 		// Takes new viewport and redraws map
 		this.viewport = viewport;
 
@@ -123,6 +123,11 @@ export default class Renderer {
 		// Draw where the center of view is pointing
 		
         // this.ctx.fillStyle = 'red';
+        // this.ctx.fillRect(_startPos.x + (viewport.position.x * this.viewport.scale) - 5, _startPos.y + (viewport.position.y * this.viewport.scale * 0.73) - 5, 10, 10);
+
+    	// Draw cursor position
+		
+        this.ctx.fillStyle = 'orange';
         // this.ctx.fillRect(_startPos.x + (viewport.position.x * this.viewport.scale) - 5, _startPos.y + (viewport.position.y * this.viewport.scale * 0.73) - 5, 10, 10);
 
 			
