@@ -59,10 +59,12 @@ export default class Map extends Component {
     }
 
     onDragging(e) {
+        console.log(this.state.viewport.position);
+        
         if (this.state.drag_mode) {
             let _viewport = Object.assign({}, this.state.viewport);
-            let _tmpX = this.state.startViewportX - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDropX);
-            let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY);
+            let _tmpX = this.state.startViewportX - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDropX)/this.state.viewport.scale;
+            let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY)/this.state.viewport.scale;
             _viewport.position = {
                 x: _tmpX,
                 y: _tmpY
@@ -180,7 +182,7 @@ export default class Map extends Component {
 
 
         // Render map tiles here
-        this.state.mapRenderer.redraw(this.state.viewport);
+        this.state.mapRenderer.redraw(this.state.viewport, this.state.cursor);
 
         // // Draw indicator -- TODO: This is temporary
         // this.ctx.beginPath();

@@ -122,8 +122,8 @@ export default class Renderer {
 
 		// Draw where the center of view is pointing
 		
-        this.ctx.fillStyle = 'red';
-        this.ctx.fillRect(_startPos.x + (viewport.position.x * this.viewport.scale) - 5, _startPos.y + (viewport.position.y * this.viewport.scale * 0.73) - 5, 10, 10);
+        // this.ctx.fillStyle = 'red';
+        // this.ctx.fillRect(_startPos.x + (viewport.position.x * this.viewport.scale) - 5, _startPos.y + (viewport.position.y * this.viewport.scale * 0.73) - 5, 10, 10);
 
 			
 	}
