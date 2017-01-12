@@ -25,66 +25,61 @@ export default class Map extends Component {
         // Bind context of functions
         this.renderMap = this.renderMap.bind(this);
         this.addEventListeners = this.addEventListeners.bind(this);
-        this.onStartDragging = this.onStartDragging.bind(this);
+        this.onMouseStartDrag = this.onMouseStartDrag.bind(this);
         this.onEndDragging = this.onEndDragging.bind(this);
         this.onDragging = this.onDragging.bind(this);
         this.onScroll = this.onScroll.bind(this);
     }
 
-    onStartDragging(e) {
+    // Mouse and touch events that will generate MapGenerator events
+    onMouseStartDrag(e) {
         this.setState({
             drag_mode: true,
-            startDropX: e.clientX || e.changedTouches[0].clientX,
-            startDropY: e.clientY || e.changedTouches[0].clientY,
-            startViewportX: this.state.viewport.position.x,
-            startViewportY: this.state.viewport.position.y
+            startDrag: {
+                x: e.clientX || e.changedTouches[0].clientX,
+                y: e.clientY || e.changedTouches[0].clientY
+            },
+            startViewport: {
+                x: this.state.viewport.position.x,
+                y: this.state.viewport.position.y
+            }
         });
     }
 
     onEndDragging(e) {
-        let _viewport = Object.assign({}, this.state.viewport);
-        _viewport.position = {
-            x: this.state.viewport.position.x + (this.state.tmpOffsetX || 0),
-            y: this.state.viewport.position.y + (this.state.tmpOffsetY || 0)
-        }
-        // console.log('onEndDragging: ', _viewport);
-
         this.setState({
             drag_mode: false,
-            startDropX: 0,
-            startDropY: 0,
-            tmpOffsetX: 0,
-            tmpOffsetY: 0,
-            viewport: _viewport
+            startDrag: {
+                x: 0,
+                y: 0
+            }
         });
     }
 
     onDragging(e) {
-        let cursor = {
-            x: this.state.viewport.position.x - (this.state.viewport.halfWidth - e.clientX) * this.state.viewport.scale,
-            y: this.state.viewport.position.y - (this.state.viewport.halfHeight - e.clientY) * this.state.viewport.scale
-        }
-
-        this.setState({ cursor });
-        console.log(cursor);
+        let viewport = Object.assign({}, this.state.viewport);
 
         if (this.state.drag_mode) {
-            let _viewport = Object.assign({}, this.state.viewport);
-            let _tmpX = this.state.startViewportX - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDropX)/this.state.viewport.scale;
-            let _tmpY = this.state.startViewportY - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDropY)/this.state.viewport.scale/0.73;
-            _viewport.position = {
+            
+            
+            let _tmpX = this.state.startViewport.x - ((e.clientX || e.changedTouches[0].clientX) - this.state.startDrag.x)/this.state.viewport.scale;
+            let _tmpY = this.state.startViewport.y - ((e.clientY || e.changedTouches[0].clientY) - this.state.startDrag.y)/this.state.viewport.scale/0.73;
+
+            viewport.position = {
                 x: _tmpX,
                 y: _tmpY
             }
-            // _viewport.position = {
-            //     x: ((_tmpX < _viewport.halfWidth) || (_tmpX > (this.state.worldMap.getBoundaries().x*this.viewport.scale - _viewport.halfWidth))) ? _viewport.position.x : _tmpX,
-            //     y: ((_tmpY < _viewport.halfHeight) || (_tmpY > (this.state.worldMap.getBoundaries().y*this.viewport.scale - _viewport.halfHeight))) ? _viewport.position.y : _tmpY
-            // }
-            // console.log(`Pos: [${_viewport.position.x},${_viewport.position.y}]`)
 
-            this.setState({
-                viewport: _viewport
-            })
+            this.setState({ viewport })
+        } else {
+            let cursor = {
+            x: this.state.viewport.position.x - (this.state.viewport.halfWidth - e.clientX) * this.state.viewport.scale,
+            y: this.state.viewport.position.y - (this.state.viewport.halfHeight - e.clientY) * this.state.viewport.scale
+        }
+                        
+        this.setState({ cursor });
+            console.log(cursor);
+
         }
     }
 
@@ -127,8 +122,8 @@ export default class Map extends Component {
             console.log(e);
         });
 
-        this.refs.canvas.addEventListener('mousedown', this.onStartDragging);
-        this.refs.canvas.addEventListener('touchstart', this.onStartDragging);
+        this.refs.canvas.addEventListener('mousedown', this.onMouseStartDrag);
+        this.refs.canvas.addEventListener('touchstart', this.onMouseStartDrag);
 
         this.refs.canvas.addEventListener('mouseup', this.onEndDragging);
         this.refs.canvas.addEventListener('touchend', this.onEndDragging);
@@ -138,6 +133,15 @@ export default class Map extends Component {
 
         this.refs.canvas.addEventListener('mousewheel', this.onScroll);
 
+    }
+
+    // MapGenerator events
+    onMove(vector) {
+
+    }
+
+    onScale(scale) {
+        
     }
 
     componentDidMount() {
@@ -177,7 +181,6 @@ export default class Map extends Component {
     }
 
     renderMap() {
-        window.requestAnimationFrame(this.renderMap);
 
         this.setState({
             indicator: this.state.indicator >= 2 ? 0 : this.state.indicator + 0.06
@@ -201,6 +204,7 @@ export default class Map extends Component {
         // this.ctx.strokeStyle = '#BE8145';
         // this.ctx.stroke();
         // this.ctx.fill();
+        window.requestAnimationFrame(this.renderMap);
 
 }
 
