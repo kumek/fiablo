@@ -3,23 +3,25 @@
 
 ## Progressive map loading with canvas and React
 ![alt text](https://github.com/kumek/fiablo/raw/master/data/fiablo_map4.gif "Logo Title Text 1")
-
+### Introduction
 We want to build a strategic game, where player can move around on big, flat map. It is based on hexagon tiles. Entire world is 2000 tiles width and height.
 But what player see on the screen is 10x10 tiles sized map. We don't need to redraw all of 2000^2 tiles each frame.
 This is mechanism that can help to achieve this.
 
+### Initial assumptions
 As we want to build user interface in React in the future, map rendering will be wrapped in React component.
 
-This post focuses on the topic of the progressive map loading only. I assume that:
-1. When progressive loading is being initialized, map already had been generated and all images were loaded.
-2. Touch and mouse events are implemented.
+This post focuses on the topic of the progressive map loading only. I assume that other parts of code are already done:
+  1. When progressive loading is being initialized, map already had been generated and all images were loaded.
+  2. Touch and mouse events are implemented.
 
 This approach has advantages:
-1. Not entire map is being rendered each frame.
-2. Small area of map can be dynamically loaded from server depending on the position of the player.
+  1. Not entire map is being rendered each frame.
+  2. Small area of map can be dynamically loaded from server depending on the position of the player.
 
 Having this in mind, take a look on the code.
-### World map
+### Code
+**WorldMap.js**
 Class that holds entire map data. We also should be able to get separate section of the map specified by coordinates.
 
 
