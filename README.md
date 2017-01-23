@@ -238,8 +238,8 @@ export default class Map extends Component {
 render() {
     return (
         <div className='canvas-container'>
-        <canvas ref={canvas => this.canvas=canvas}'></canvas>
-//        </div>
+        <canvas ref={canvas => this.canvas=canvas}></canvas>
+        </div>
         )}
 }
 ```
